@@ -19,9 +19,12 @@ jobs:
         # 步骤执行指令
         run: sh deploy.sh
 
-      - name: Deploy to github pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to Tencent Cloud Server
+        uses: appleboy/scp-action@v0.1.7
         with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          commit_message: deploy to github pages
-          publish_dir: ./vuepress/docs/.vuepress/dist/
+          host: ${{ secrets.TENCENT_CLOUD_HOST }}
+          username: ${{ secrets.TENCENT_CLOUD_USER }}
+          key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
+          port: 22
+          source: "./vuepress/.vuepress/dist/*"
+          target: "/root/wangtao/font-end-project"
