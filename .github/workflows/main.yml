@@ -13,18 +13,22 @@ jobs:
     # 步骤
     steps:
       # 使用别人的action
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       # 步骤名称
       - name: yarn & build
         # 步骤执行指令
         run: sh deploy.sh
 
-      - name: Deploy to Tencent Cloud Server
-        uses: appleboy/scp-action@v0.1.7
+      - name: Deploy
+        # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
+        uses: cross-the-world/scp-pipeline@master
+        env:
+          WELCOME: 'ssh scp ssh pipelines'
+          LASTSSH: 'Doing something after copying'
         with:
           host: ${{ secrets.TENCENT_CLOUD_HOST }}
-          username: ${{ secrets.TENCENT_CLOUD_USER }}
+          user: ${{ secrets.TENCENT_CLOUD_USER }}
           key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
-          port: 22
-          source: "./vuepress/.vuepress/dist/*"
-          target: "/root/wangtao/font-end-project"
+          connect_timeout: 10s
+          local: "./vuepress/.vuepress/dist/*"
+          remote: "/root/wangtao/font-end-project"
