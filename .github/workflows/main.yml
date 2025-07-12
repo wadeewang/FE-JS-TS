@@ -15,12 +15,6 @@ jobs:
       # 使用别人的action
       - uses: actions/checkout@v4
       
-      # 设置Node.js环境
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'yarn'
       
       # 步骤名称
       - name: Install dependencies and build
