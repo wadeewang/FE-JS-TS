@@ -15,7 +15,6 @@ jobs:
       # 使用别人的action
       - uses: actions/checkout@v4
       
-      
       # 步骤名称
       - name: Install dependencies and build
         # 步骤执行指令
@@ -54,6 +53,6 @@ jobs:
           host: ${{ secrets.TENCENT_CLOUD_HOST }}
           user: ${{ secrets.TENCENT_CLOUD_USER }}
           key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
-          connect_timeout: 10s
+          connect_timeout: 60s
           local: "./vuepress/.vuepress/dist/*"
-          remote: "/root/wangtao/font-end-project/"
+          remote: "/root/wangtao/font-end-project/fe-js-ts"
