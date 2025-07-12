@@ -14,42 +14,26 @@ jobs:
     steps:
       # 使用别人的action
       - uses: actions/checkout@v4
-      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
       # 步骤名称
       - name: Install dependencies and build
         # 步骤执行指令
         run: sh deploy.sh
 
-      - name: Debug - List build files
-        run: |
-          echo "Checking if build files exist:"
-          ls -la ./vuepress/.vuepress/dist/ || echo "Build directory not found"
-          echo "Current working directory:"
-          pwd
-          echo "Directory structure:"
-          find . -name "dist" -type d
-          echo "Contents of vuepress/.vuepress/dist/:"
-          ls -la ./vuepress/.vuepress/dist/ || echo "No dist directory found"
-
-      - name: Verify build output
-        run: |
-          if [ ! -d "./vuepress/.vuepress/dist" ]; then
-            echo "ERROR: Build directory does not exist!"
-            exit 1
-          fi
-          if [ ! -f "./vuepress/.vuepress/dist/index.html" ]; then
-            echo "ERROR: index.html not found in build output!"
-            exit 1
-          fi
-          echo "Build verification passed!"
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.TENCENT_CLOUD_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.TENCENT_CLOUD_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to server
-        run: |
-          scp -r ./vuepress/.vuepress/dist/* ${{ secrets.TENCENT_CLOUD_USER }}@${{ secrets.TENCENT_CLOUD_HOST }}:/root/wangtao/font-end-project/fe-js-ts/
+      # 命名这个任务为发布Deploy
+      - name: Deploy
+        # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
+        uses: cross-the-world/scp-pipeline@master
+        env:
+          WELCOME: 'ssh scp ssh pipelines'
+          LASTSSH: 'Doing something after copying'
+        with:
+          host: ${{ secrets.TENCENT_CLOUD_HOST }}
+          user: ${{ secrets.TENCENT_CLOUD_USER }}
+          key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
+          connect_timeout: 10s
+          local: './vuepress/.vuepress/dist/*'
+          remote: /root/wangtao/font-end-project/fe-js-ts
