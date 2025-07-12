@@ -32,5 +32,6 @@ jobs:
           host: ${{ secrets.TENCENT_CLOUD_HOST }}
           user: ${{ secrets.TENCENT_CLOUD_USER }}
           key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
+          pass: ${{secrets.TENCENT_CLOUD_USER_PASS}}
           local: './vuepress/.vuepress/dist/*'
           remote: /root/wangtao/font-end-project/fe-js-ts
