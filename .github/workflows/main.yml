@@ -43,16 +43,13 @@ jobs:
           fi
           echo "Build verification passed!"
 
-      - name: Deploy
-        # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
-        uses: cross-the-world/scp-pipeline@master
-        env:
-          WELCOME: 'ssh scp ssh pipelines'
-          LASTSSH: 'Doing something after copying'
-        with:
-          host: ${{ secrets.TENCENT_CLOUD_HOST }}
-          user: ${{ secrets.TENCENT_CLOUD_USER }}
-          key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
-          connect_timeout: 60s
-          local: "./vuepress/.vuepress/dist/*"
-          remote: "/root/wangtao/font-end-project/fe-js-ts"
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TENCENT_CLOUD_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.TENCENT_CLOUD_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        run: |
+          scp -r ./vuepress/.vuepress/dist/* ${{ secrets.TENCENT_CLOUD_USER }}@${{ secrets.TENCENT_CLOUD_HOST }}:/root/wangtao/font-end-project/fe-js-ts/
