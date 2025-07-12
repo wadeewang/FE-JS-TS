@@ -14,8 +14,16 @@ jobs:
     steps:
       # 使用别人的action
       - uses: actions/checkout@v4
+      
+      # 设置Node.js环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+      
       # 步骤名称
-      - name: yarn & build
+      - name: Install dependencies and build
         # 步骤执行指令
         run: sh deploy.sh
 
@@ -27,6 +35,20 @@ jobs:
           pwd
           echo "Directory structure:"
           find . -name "dist" -type d
+          echo "Contents of vuepress/.vuepress/dist/:"
+          ls -la ./vuepress/.vuepress/dist/ || echo "No dist directory found"
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "./vuepress/.vuepress/dist" ]; then
+            echo "ERROR: Build directory does not exist!"
+            exit 1
+          fi
+          if [ ! -f "./vuepress/.vuepress/dist/index.html" ]; then
+            echo "ERROR: index.html not found in build output!"
+            exit 1
+          fi
+          echo "Build verification passed!"
 
       - name: Deploy
         # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作

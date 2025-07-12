@@ -3,23 +3,22 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+# 安装根目录依赖
 yarn
+
+# 进入vuepress目录
 cd vuepress
+
+# 安装vuepress目录的依赖
 yarn
+
+# 构建项目
 yarn build
 
-# cd .vuepress/dist
+# 检查构建结果
+echo "Build completed. Checking dist directory:"
+ls -la .vuepress/dist/
 
-
-# git init
-# git add .
-# git commit -m 'deploy'
-
-# # 如果发布到 https://<USERNAME>.github.io
-# # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
-
-# # 如果发布到 https://<USERNAME>.github.io/<REPO>
-# git push -f git@github.com:W-HanYu/FE-JS-TS.git master:gh-pages
-
-# cd -
+# 返回根目录
+cd ..
 
