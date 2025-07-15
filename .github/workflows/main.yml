@@ -23,14 +23,11 @@ jobs:
         # 步骤执行指令
         run: sh deploy.sh
 
-      - name: Prepare SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.TENCENT_CLOUD_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa  # 关键：私钥权限必须为600
-          ssh-keyscan -p 22 ${{ secrets.TENCENT_CLOUD_HOST }} >> ~/.ssh/known_hosts
-          echo "SSH密钥指纹:"
-          ssh-keygen -l -f ~/.ssh/id_rsa
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: vuepress-dist
+          path: ./vuepress/.vuepress/dist/
 
       - name: Deploy
         uses: cross-the-world/scp-pipeline@master
@@ -43,3 +40,4 @@ jobs:
         env:
           WELCOME: 'ssh scp ssh pipelines'
           LASTSSH: 'Doing something after copying'
+        
