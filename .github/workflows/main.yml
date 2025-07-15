@@ -3,6 +3,7 @@ on:
   #监听push操作
   push:
     branches:
+      # mian分支，你也可以改成其他分支
       - master
 
 jobs:
@@ -13,22 +14,14 @@ jobs:
     # 步骤
     steps:
       # 使用别人的action
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
+      - uses: actions/checkout@v2
       # 步骤名称
-      - name: Install dependencies and build
+      - name: yarn&build
         # 步骤执行指令
         run: sh deploy.sh
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: vuepress-dist
-          path: ./vuepress/.vuepress/dist/
-
+      #- name: yarn build
+      #run: yarn build
+      # 命名这个任务为发布Deploy
       - name: Deploy
         uses: cross-the-world/scp-pipeline@master
         with:
