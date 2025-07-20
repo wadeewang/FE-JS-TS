@@ -31,5 +31,6 @@ jobs:
           host: ${{ secrets.USER_HOST }}
           username: ${{ secrets.USER_NAME }}
           password: ${{ secrets.USER_PASS }}
-          source: "./vuepress/.vuepress/dist/**"
+          source: "./vuepress/.vuepress/dist"
           target: "/root/wangtao/font-end-project/FE-JS-TS"
+          debug: true
