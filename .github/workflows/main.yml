@@ -18,7 +18,10 @@ jobs:
       # 步骤名称
       - name: yarn & build
         # 步骤执行指令
-        run: sh deploy.sh
+        run: |
+          sh deploy.sh
+          echo "dist 目录内容如下："
+          ls -al ./vuepress/.vuepress/dist
       #- name: yarn build
       #run: yarn build
       # 命名这个任务为发布Deploy
@@ -28,5 +31,5 @@ jobs:
           host: ${{ secrets.USER_HOST }}
           username: ${{ secrets.USER_NAME }}
           password: ${{ secrets.USER_PASS }}
-          source: "./vuepress/.vuepress/dist/*"
+          source: "./vuepress/.vuepress/dist/**"
           target: "/root/wangtao/font-end-project/FE-JS-TS"
