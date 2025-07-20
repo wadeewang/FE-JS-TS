@@ -3,6 +3,7 @@ on:
   #监听push操作
   push:
     branches:
+      # mian分支，你也可以改成其他分支
       - master
 
 jobs:
@@ -13,22 +14,19 @@ jobs:
     # 步骤
     steps:
       # 使用别人的action
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
+      - uses: actions/checkout@v2
       # 步骤名称
-      - name: Install dependencies and build
+      - name: yarn & build
         # 步骤执行指令
         run: sh deploy.sh
-
+      #- name: yarn build
+      #run: yarn build
       # 命名这个任务为发布Deploy
       - name: Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.TENCENT_CLOUD_HOST }}
-          username: ${{ secrets.TENCENT_CLOUD_USER }}
-          key: ${{ secrets.TENCENT_CLOUD_SSH_KEY }}
+          host: ${{ secrets.USER_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.USER_PASS }}
           source: "./vuepress/.vuepress/dist/*"
-          target: "/root/wangtao/font-end-project/fe-js-ts"
+          target: "/root/wangtao/font-end-project/FE-JS-TS"
